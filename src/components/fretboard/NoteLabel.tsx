@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import {Tonal, Range, Interval, Note as asNote} from '@tonaljs/modules';
+import React, { useState, useEffect, useRef } from 'react';
+import { Tonal, Range, Interval, Note as asNote } from '@tonaljs/modules';
 import styled from 'styled-components';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import MIDISounds from 'midi-sounds-react';
 
 import { NoteInput } from './interfaces';
-import { formatEnharmonicNote, generateNoteInput } from '../../util/helpers';
+import { formatEnharmonicNote, generateNoteInput, getMIDISoundPitchNumber } from '../../util/helpers';
+import {
+  FRET_VB_WIDTH,
+  FRET_VB_HEIGHT,
+  NUM_OF_STRINGS,
+  FRETBOARD_TOP_VB_WIDTH,
+  FRETBOARD_VB_PADDING,
+} from './constants';
 
-const FRET_VB_WIDTH = 400;
-const FRET_VB_HEIGHT = 1000;
-const MIN_STRING_WIDTH = 8;
-const MAX_STRING_WIDTH = 20;
-const NUM_OF_STRINGS = 6;
-const FRETBOARD_TOP_VB_WIDTH = 20;
-const FRETBOARD_VB_PADDING = 80;
+const MIDI_SOUND_GUITAR_NUMBER = 263;
 
 interface NoteLabelProps {
   tuning: string[];
@@ -25,7 +29,6 @@ interface NoteLabelProps {
 const StyledLabelGroup = styled.g<{ showOnHover: boolean; show: boolean }>`
   cursor: pointer;
   opacity: ${props => (props.showOnHover && !props.show ? 0 : 1)};
-  transition: opacity 250ms linear;
 
   &:hover {
     opacity: 1;
@@ -51,6 +54,7 @@ const NoteLabel: React.FC<NoteLabelProps> = ({
   handleNoteClick,
 }: NoteLabelProps) => {
   const [noteLabelMap, setNoteLabelMap] = useState(createTonalNotesMap(tuning, numOfFrets));
+  const refContainer = useRef(null);
 
   useEffect(() => {
     setNoteLabelMap(createTonalNotesMap(tuning, numOfFrets));
@@ -64,6 +68,7 @@ const NoteLabel: React.FC<NoteLabelProps> = ({
 
   return (
     <svg>
+      <MIDISounds ref={refContainer} instruments={[MIDI_SOUND_GUITAR_NUMBER]} />
       {noteLabelMap.map((strNotes, strNotesIdx) => {
         const strNum = strNotesIdx + 1; // strings are 1-indexed
         const labelVBPositionCy: number = strNotesIdx * (FRET_VB_HEIGHT / (NUM_OF_STRINGS - 1));
@@ -81,6 +86,9 @@ const NoteLabel: React.FC<NoteLabelProps> = ({
               : 'black';
 
           const handleNoteClickWrapper = () => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore
+            refContainer.current!.playStrumDownNow(MIDI_SOUND_GUITAR_NUMBER, [getMIDISoundPitchNumber(note)], 0.5);
             handleNoteClick(generateNoteInput(note, strNum));
           };
 

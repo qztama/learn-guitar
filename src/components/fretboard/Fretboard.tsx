@@ -2,14 +2,15 @@ import React from 'react';
 import NoteLabel from './NoteLabel';
 
 import { NoteInput } from './interfaces';
-
-const FRET_VB_WIDTH = 400;
-const FRET_VB_HEIGHT = 1000;
-const MIN_STRING_WIDTH = 8;
-const MAX_STRING_WIDTH = 20;
-const NUM_OF_STRINGS = 6;
-const FRETBOARD_TOP_VB_WIDTH = 20;
-const FRETBOARD_VB_PADDING = 80;
+import {
+  FRET_VB_WIDTH,
+  FRET_VB_HEIGHT,
+  MIN_STRING_WIDTH,
+  MAX_STRING_WIDTH,
+  NUM_OF_STRINGS,
+  FRETBOARD_TOP_VB_WIDTH,
+  FRETBOARD_VB_PADDING,
+} from './constants';
 
 interface FretProps {
   fretNum: number;

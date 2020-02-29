@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import seedrandom from 'seedrandom';
-import moment from 'moment';
-import { Tonal, Range, Interval, Note as asNote } from '@tonaljs/modules';
+import { Tonal, Range, Interval } from '@tonaljs/modules';
 import { NoteInput } from '../components/fretboard/interfaces';
 
 import Fretboard from '../components/fretboard/Fretboard';
@@ -88,6 +87,10 @@ const ExerciseRow = styled.div<{ centered?: boolean }>`
   padding: 16px 0;
 `;
 
+const ExerciseInfoEntryTitle = styled.h3`
+  margin: 0 0 8px 0;
+`;
+
 const ExerciseInfoEntry: React.FC<{ title: string; content: string | number }> = ({
   title,
   content,
@@ -95,12 +98,9 @@ const ExerciseInfoEntry: React.FC<{ title: string; content: string | number }> =
   title: string;
   content: string | number;
 }) => {
-  const Title = styled.h3`
-    margin: 0 0 8px 0;
-  `;
   return (
     <div>
-      <Title>{title}</Title>
+      <ExerciseInfoEntryTitle>{title}</ExerciseInfoEntryTitle>
       <div>{content}</div>
     </div>
   );
